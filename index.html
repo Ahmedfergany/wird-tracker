@@ -3,248 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>متابع الورد اليومي</title>
+<title>ورد المحاسبة - الفرقة الأولى</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #1D9E75;
-    --green-light: #E1F5EE;
-    --green-dark: #0F6E56;
-    --blue: #185FA5;
-    --amber: #B5710A;
-    --purple: #7F77DD;
-    --bg: #F7F5F0;
-    --card: #FFFFFF;
-    --border: rgba(0,0,0,0.08);
-    --text: #1a1a1a;
-    --muted: #888;
-    --wa: #25D366;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Tajawal', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 2rem;
-  }
-  .header {
-    background: var(--green-dark);
-    color: #fff;
-    padding: 1.5rem 1rem 1rem;
-    text-align: center;
-  }
-  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-  .header .date { font-size: 13px; opacity: 0.75; }
-  .score-bar {
-    background: var(--green);
-    padding: 12px 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .score-text { color: #fff; font-size: 14px; font-weight: 500; }
-  .pct { color: #fff; font-size: 18px; font-weight: 700; }
-  .progress-outer { height: 6px; background: rgba(255,255,255,0.3); border-radius: 3px; flex: 1; margin: 0 12px; overflow: hidden; }
-  .progress-inner { height: 100%; background: #fff; border-radius: 3px; transition: width 0.4s ease; }
-
-  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 1rem; }
-  .stat { background: var(--card); border-radius: 12px; padding: 12px; text-align: center; border: 0.5px solid var(--border); }
-  .stat-n { font-size: 24px; font-weight: 700; color: var(--text); }
-  .stat-l { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  .sections { padding: 0 1rem; display: flex; flex-direction: column; gap: 12px; }
-  .card { background: var(--card); border-radius: 14px; overflow: hidden; border: 0.5px solid var(--border); }
-  .card-header { padding: 12px 14px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); }
-  .card-title { font-size: 14px; font-weight: 700; }
-  .card-count { font-size: 12px; color: var(--muted); background: var(--bg); padding: 2px 10px; border-radius: 20px; }
-  .item { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; cursor: pointer; transition: background 0.15s; border-bottom: 0.5px solid var(--border); }
-  .item:last-child { border-bottom: none; }
-  .item:hover { background: #fafaf8; }
-  .item.done { background: var(--green-light); }
-  .item-name { font-size: 14px; }
-  .item.done .item-name { color: var(--green-dark); font-weight: 500; }
-  .circle { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
-  .item.done .circle { background: var(--green); border-color: var(--green); }
-  .tick { display: none; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
-  .item.done .tick { display: block; }
-  .cat-bar { height: 4px; background: #eee; }
-  .cat-bar-fill { height: 100%; transition: width 0.4s ease; }
-
-  .bottom { padding: 1rem; display: flex; flex-direction: column; gap: 10px; }
-  .phone-box { background: var(--card); border-radius: 14px; padding: 14px; border: 0.5px solid var(--border); }
-  .phone-box label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 8px; }
-  .phone-box input {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-    border-radius: 10px; font-size: 14px; font-family: monospace; direction: ltr;
-    background: var(--bg); color: var(--text); outline: none;
-  }
-  .phone-box input:focus { border-color: var(--green); }
-  .wa-btn {
-    width: 100%; padding: 14px; background: var(--wa); color: #fff;
-    border: none; border-radius: 14px; font-size: 16px; font-weight: 700;
-    font-family: 'Tajawal', sans-serif;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-    transition: background 0.2s;
-  }
-  .wa-btn:hover { background: #1ebe5d; }
-  .wa-btn:active { transform: scale(0.98); }
-  .wa-icon { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
-  .reset-btn {
-    width: 100%; padding: 11px; background: transparent; color: var(--muted);
-    border: 0.5px solid var(--border); border-radius: 14px; font-size: 13px;
-    font-family: 'Tajawal', sans-serif; cursor: pointer;
-  }
-  .reset-btn:hover { background: rgba(0,0,0,0.03); }
-
-  .history-box { background: var(--card); border-radius: 14px; overflow: hidden; border: 0.5px solid var(--border); }
-  .history-title { padding: 12px 14px; font-size: 13px; font-weight: 700; color: var(--muted); border-bottom: 0.5px solid var(--border); }
-  .history-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 0.5px solid var(--border); font-size: 13px; }
-  .history-row:last-child { border-bottom: none; }
+:root {
+  --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #0F6E56;
+  --blue: #185FA5; --blue-light: #E6F1FB;
+  --amber: #B5710A; --amber-light: #FAEEDA;
+  --purple: #7F77DD; --purple-light: #EEEDFE;
+  --red: #A32D2D; --red-light: #FCEBEB;
+  --orange: #c0570a; --orange-light: #fff3e6;
+  --bg: #F5F3EE; --card: #FFFFFF;
+  --border: rgba(0,0,0,0.07); --text: #1a1a1a; --muted: #888;
+  --wa: #25D366;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 3rem; }
+.header { background: var(--green-dark); color: #fff; padding: 1.25rem 1rem 1rem; text-align: center; }
+.header h1 { font-size: 20px; font-weight: 700; }
+.header .sub { font-size: 13px; opacity: 0.7; margin-top: 3px; }
+.score-bar { background: var(--green); padding: 10px 1rem; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.score-text { color: #fff; font-size: 13px; white-space: nowrap; }
+.pct { color: #fff; font-size: 17px; font-weight: 700; white-space: nowrap; }
+.prog-out { height: 6px; background: rgba(255,255,255,0.3); border-radius: 3px; flex: 1; overflow: hidden; }
+.prog-in { height: 100%; background: #fff; border-radius: 3px; transition: width 0.4s; }
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 1rem; }
+.stat { background: var(--card); border-radius: 12px; padding: 10px; text-align: center; border: 0.5px solid var(--border); }
+.stat-n { font-size: 20px; font-weight: 700; }
+.stat-l { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.sections { padding: 0 1rem; display: flex; flex-direction: column; gap: 10px; }
+.card { background: var(--card); border-radius: 14px; overflow: hidden; border: 0.5px solid var(--border); }
+.card-header { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); }
+.card-title { font-size: 15px; font-weight: 700; }
+.card-pts { font-size: 12px; color: var(--muted); background: var(--bg); padding: 2px 10px; border-radius: 20px; }
+.item { border-bottom: 0.5px solid var(--border); }
+.item:last-child { border-bottom: none; }
+.item-main { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; cursor: pointer; transition: background 0.12s; gap: 8px; }
+.item-main:hover { background: #fafaf8; }
+.item.done .item-main { background: var(--green-light); }
+.item.qada .item-main { background: var(--orange-light); }
+.item-right { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.item-name { font-size: 14px; flex: 1; }
+.item.done .item-name { color: var(--green-dark); font-weight: 500; }
+.item.qada .item-name { color: var(--orange); font-weight: 500; }
+.pts-badge { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
+.circle { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.item.done .circle { background: var(--green); border-color: var(--green); }
+.item.qada .circle { background: var(--orange); border-color: var(--orange); }
+.tick { display: none; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+.item.done .tick, .item.qada .tick { display: block; }
+.qada-row { display: none; padding: 6px 14px 8px; background: var(--orange-light); border-top: 0.5px dashed rgba(192,87,10,0.2); }
+.item.done .qada-row, .item.qada .qada-row { display: flex; align-items: center; gap: 8px; }
+.qada-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.qada-toggle input { accent-color: var(--orange); width: 16px; height: 16px; cursor: pointer; }
+.qada-toggle span { font-size: 12px; color: var(--orange); }
+.cat-bar { height: 4px; background: #eee; }
+.cat-bar-fill { height: 100%; transition: width 0.4s; }
+.bottom { padding: 1rem; display: flex; flex-direction: column; gap: 10px; }
+.input-card { background: var(--card); border-radius: 14px; padding: 14px; border: 0.5px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.input-card label { font-size: 13px; color: var(--muted); }
+.input-card input, .input-card textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); outline: none; resize: none; }
+.input-card input:focus, .input-card textarea:focus { border-color: var(--green); }
+.input-card textarea { min-height: 70px; }
+.wa-btn { width: 100%; padding: 14px; background: var(--wa); color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; font-family: 'Tajawal', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s; }
+.wa-btn:hover { background: #1ebe5d; }
+.wa-btn:active { transform: scale(0.98); }
+.wa-icon { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
+.reset-btn { width: 100%; padding: 11px; background: transparent; color: var(--muted); border: 0.5px solid var(--border); border-radius: 14px; font-size: 13px; font-family: 'Tajawal', sans-serif; cursor: pointer; }
+.reset-btn:hover { background: rgba(0,0,0,0.03); }
+.history-box { background: var(--card); border-radius: 14px; overflow: hidden; border: 0.5px solid var(--border); }
+.history-title { padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--muted); border-bottom: 0.5px solid var(--border); }
+.history-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 14px; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+.history-row:last-child { border-bottom: none; }
 </style>
 </head>
 <body>
-
 <div class="header">
-  <h1>متابع الورد اليومي</h1>
-  <div class="date" id="date-label"></div>
+  <h1>ورد المحاسبة اليومي</h1>
+  <div class="sub" id="date-label"></div>
 </div>
 <div class="score-bar">
-  <span class="score-text" id="score-text">0 / 0</span>
-  <div class="progress-outer"><div class="progress-inner" id="main-bar" style="width:0%"></div></div>
+  <span class="score-text" id="score-text">0 / 0 نقطة</span>
+  <div class="prog-out"><div class="prog-in" id="main-bar" style="width:0%"></div></div>
   <span class="pct" id="pct-label">0%</span>
 </div>
-
 <div class="stats">
-  <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">مكتمل</div></div>
-  <div class="stat"><div class="stat-n" id="s-left">0</div><div class="stat-l">متبقي</div></div>
+  <div class="stat"><div class="stat-n" id="s-got" style="color:var(--green)">0</div><div class="stat-l">نقاطك</div></div>
+  <div class="stat"><div class="stat-n" id="s-max">0</div><div class="stat-l">الكل</div></div>
   <div class="stat"><div class="stat-n" id="s-pct">0%</div><div class="stat-l">الإنجاز</div></div>
 </div>
-
 <div class="sections" id="sections"></div>
-
 <div class="bottom" id="bottom"></div>
 
 <script>
 const SHEIKH_PHONE = '201033488462';
+const DATA = [
+  { id:'fajr',    title:'الفجر',    color:'#185FA5', items:[
+    {id:'fajr_qabli',  name:'السنة القبلية', pts:1},
+    {id:'fajr_salah',  name:'صلاة الجماعة',  pts:5, isSalah:true},
+    {id:'fajr_athkar', name:'أذكار الصلاة',  pts:1}
+  ]},
+  { id:'duhr',    title:'الظهر',    color:'#1D9E75', items:[
+    {id:'duhr_qabli',  name:'السنة القبلية', pts:1},
+    {id:'duhr_salah',  name:'صلاة الجماعة',  pts:5, isSalah:true},
+    {id:'duhr_athkar', name:'أذكار الصلاة',  pts:1},
+    {id:'duhr_badi',   name:'السنة البعدية', pts:1}
+  ]},
+  { id:'asr',     title:'العصر',    color:'#B5710A', items:[
+    {id:'asr_qabli',   name:'السنة القبلية', pts:1},
+    {id:'asr_salah',   name:'صلاة الجماعة',  pts:5, isSalah:true},
+    {id:'asr_athkar',  name:'أذكار الصلاة',  pts:1}
+  ]},
+  { id:'maghrib', title:'المغرب',   color:'#7F77DD', items:[
+    {id:'mgh_salah',   name:'صلاة الجماعة',  pts:5, isSalah:true},
+    {id:'mgh_athkar',  name:'أذكار الصلاة',  pts:1},
+    {id:'mgh_badi',    name:'السنة البعدية', pts:1}
+  ]},
+  { id:'isha',    title:'العشاء',   color:'#A32D2D', items:[
+    {id:'isha_qabli',  name:'السنة القبلية', pts:1},
+    {id:'isha_salah',  name:'صلاة الجماعة',  pts:5, isSalah:true},
+    {id:'isha_athkar', name:'أذكار الصلاة',  pts:1},
+    {id:'isha_badi',   name:'السنة البعدية', pts:1}
+  ]},
+  { id:'athkar',  title:'الأذكار',  color:'#0F6E56', items:[
+    {id:'ath_sabah',   name:'أذكار الصباح',       pts:1},
+    {id:'ath_masaa',   name:'أذكار المساء',        pts:1},
+    {id:'ath_istigh',  name:'الاستغفار',           pts:1},
+    {id:'ath_tahlil',  name:'التهليل',             pts:1},
+    {id:'ath_nabi',    name:'الصلاة على النبي ﷺ', pts:1},
+    {id:'ath_habib',   name:'الحبيبتان',           pts:1},
+    {id:'ath_baqiyat', name:'الباقيات الصالحات',  pts:1}
+  ]},
+  { id:'extra',   title:'النوافل والورد', color:'#534AB7', items:[
+    {id:'ext_qiyam',  name:'قيام الليل', pts:1},
+    {id:'ext_quran',  name:'ورد القرآن', pts:1},
+    {id:'ext_siyam',  name:'الصيام',     pts:1}
+  ]}
+];
 
-const DATA = {
-  salawat: { title: "الصلوات الخمس",    color: "#1D9E75", items: ["الفجر","الظهر","العصر","المغرب","العشاء"] },
-  sunan:   { title: "السنن الرواتب",    color: "#185FA5", items: ["سنة الفجر (2)","سنة الظهر القبلية (4)","سنة الظهر البعدية (2)","سنة المغرب (2)","سنة العشاء (2)"] },
-  quran:   { title: "ورد القرآن",       color: "#B5710A", items: ["حزب الصباح","حزب المساء","مراجعة المحفوظ"] },
-  athkar:  { title: "الأذكار والأوراد", color: "#7F77DD", items: ["أذكار الصباح","أذكار المساء","الاستغفار (100)","الصلاة على النبي (100)"] }
-};
+function todayKey(){ const d=new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+function todayLabel(){ return new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+function load(k,def){ try{const r=localStorage.getItem(k);return r?JSON.parse(r):def;}catch{return def;} }
+function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
 
-function todayKey() { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
-function todayLabel() { return new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
-function load(k,def) { try { const r=localStorage.getItem(k); return r?JSON.parse(r):def; } catch { return def; } }
-function save(k,v) { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} }
+const TK=todayKey();
+let state=load('wird2_state',{});
+let history=load('wird2_history',[]);
+if(!state[TK]) state[TK]={};
 
-let state   = load('wird_state', {});
-let history = load('wird_history', []);
-const TK = todayKey();
-if (!state[TK]) state[TK] = {};
+function maxPts(){ let t=0; DATA.forEach(c=>c.items.forEach(i=>t+=i.pts)); return t; }
+function calcPts(){ let g=0; DATA.forEach(c=>c.items.forEach(i=>{ const s=state[TK][i.id]; if(s==='done') g+=i.pts; else if(s==='qada') g+=i.pts/2; })); return g; }
+function catPts(cat){ let g=0,m=0; cat.items.forEach(i=>{ m+=i.pts; const s=state[TK][i.id]; if(s==='done') g+=i.pts; else if(s==='qada') g+=i.pts/2; }); return{g,m}; }
+function fmt(n){ return Number.isInteger(n)?n:n.toFixed(1); }
 
-function countAll() {
-  let done=0,total=0;
-  Object.keys(DATA).forEach(cat => DATA[cat].items.forEach((_,i)=>{ total++; if(state[TK][cat+'_'+i]) done++; }));
-  return {done,total};
-}
+function toggle(id){ const c=state[TK][id]; state[TK][id]=c?null:'done'; save('wird2_state',state); render(); }
+function toggleQada(id,checked){ state[TK][id]=checked?'qada':'done'; save('wird2_state',state); render(); }
 
-function toggle(cat,idx) {
-  state[TK][cat+'_'+idx] = !state[TK][cat+'_'+idx];
-  save('wird_state',state);
-  render();
-}
-
-function buildMsg() {
-  const name = load('wird_name','') || 'أحد الإخوة';
-  let msg = `📋 *تقرير الورد اليومي*\n👤 ${name}\n📅 ${todayLabel()}\n\n`;
-  Object.keys(DATA).forEach(cat => {
-    const c = DATA[cat];
-    const cd = c.items.filter((_,i)=>state[TK][cat+'_'+i]).length;
-    msg += `*${c.title}* (${cd}/${c.items.length})\n`;
-    c.items.forEach((item,i) => { msg += (state[TK][cat+'_'+i]?'✅':'❌') + ' ' + item + '\n'; });
-    msg += '\n';
+function buildMsg(){
+  const name=load('wird2_name','')||'أحد الإخوة';
+  const comment=load('wird2_comment','');
+  const got=calcPts(),mx=maxPts(),pct=Math.round(got/mx*100);
+  let msg=`📋 *ورد المحاسبة اليومي*\n👤 ${name}\n📅 ${todayLabel()}\n\n`;
+  DATA.forEach(cat=>{
+    const{g,m}=catPts(cat);
+    msg+=`*${cat.title}* (${fmt(g)}/${m})\n`;
+    cat.items.forEach(i=>{ const s=state[TK][i.id]; msg+=`${s==='done'?'✅':s==='qada'?'🟡':'❌'} ${i.name}${s==='qada'?' (قضاء)':''}\n`; });
+    msg+='\n';
   });
-  const {done,total} = countAll();
-  msg += `📊 *الإجمالي: ${done}/${total} (${Math.round(done/total*100)}%)*`;
+  msg+=`📊 *الإجمالي: ${fmt(got)}/${mx} نقطة (${pct}%)*`;
+  if(comment.trim()) msg+=`\n\n💬 *تعليق:* ${comment.trim()}`;
   return msg;
 }
 
-function sendWA() {
-  const ph = (document.getElementById('phone-inp')?.value||SHEIKH_PHONE).replace(/\D/g,'');
-  window.open(`https://wa.me/${ph}?text=${encodeURIComponent(buildMsg())}`, '_blank');
-}
+function sendWA(){ const ph=(document.getElementById('phone-inp')?.value||SHEIKH_PHONE).replace(/\D/g,''); window.open(`https://wa.me/${ph}?text=${encodeURIComponent(buildMsg())}`,'_blank'); }
 
-function resetDay() {
-  const {done,total} = countAll();
-  const entry = { date: TK, done, total, label: todayLabel() };
-  const ex = history.findIndex(h=>h.date===TK);
+function resetDay(){
+  const got=calcPts(),mx=maxPts();
+  const entry={date:TK,got,max:mx,label:todayLabel()};
+  const ex=history.findIndex(h=>h.date===TK);
   if(ex>=0) history[ex]=entry; else history.unshift(entry);
   if(history.length>7) history=history.slice(0,7);
-  save('wird_history',history);
-  state[TK]={};
-  save('wird_state',state);
-  render();
+  save('wird2_history',history); state[TK]={}; save('wird2_state',state); save('wird2_comment',''); render();
 }
 
-function render() {
-  const {done,total} = countAll();
-  const pct = total ? Math.round(done/total*100) : 0;
+function render(){
+  const got=calcPts(),mx=maxPts(),pct=mx?Math.round(got/mx*100):0;
+  document.getElementById('date-label').textContent=todayLabel();
+  document.getElementById('score-text').textContent=`${fmt(got)} / ${mx} نقطة`;
+  document.getElementById('main-bar').style.width=pct+'%';
+  document.getElementById('pct-label').textContent=pct+'%';
+  document.getElementById('s-got').textContent=fmt(got);
+  document.getElementById('s-max').textContent=mx;
+  document.getElementById('s-pct').textContent=pct+'%';
 
-  document.getElementById('date-label').textContent = todayLabel();
-  document.getElementById('score-text').textContent = `${done} / ${total}`;
-  document.getElementById('main-bar').style.width = pct+'%';
-  document.getElementById('pct-label').textContent = pct+'%';
-  document.getElementById('s-done').textContent = done;
-  document.getElementById('s-left').textContent = total-done;
-  document.getElementById('s-pct').textContent = pct+'%';
-
-  const sec = document.getElementById('sections');
-  sec.innerHTML = Object.keys(DATA).map(cat => {
-    const c = DATA[cat];
-    const cd = c.items.filter((_,i)=>state[TK][cat+'_'+i]).length;
-    const cp = Math.round(cd/c.items.length*100);
+  document.getElementById('sections').innerHTML=DATA.map(cat=>{
+    const{g,m}=catPts(cat); const cp=Math.round(g/m*100);
     return `<div class="card">
-      <div class="card-header">
-        <span class="card-title" style="color:${c.color}">${c.title}</span>
-        <span class="card-count">${cd}/${c.items.length}</span>
-      </div>
-      ${c.items.map((item,i) => {
-        const d = state[TK][cat+'_'+i];
-        return `<div class="item ${d?'done':''}" onclick="toggle('${cat}',${i})">
-          <span class="item-name">${item}</span>
-          <div class="circle"><div class="tick"></div></div>
+      <div class="card-header"><span class="card-title" style="color:${cat.color}">${cat.title}</span><span class="card-pts">${fmt(g)} / ${m} نقطة</span></div>
+      ${cat.items.map(it=>{
+        const s=state[TK][it.id],isQ=s==='qada',isDone=s==='done'||isQ;
+        const cls=s==='done'?'done':isQ?'qada':'';
+        const bbg=isQ?'var(--orange-light)':isDone?'var(--green-light)':'var(--bg)';
+        const bc=isQ?'var(--orange)':isDone?'var(--green-dark)':'var(--muted)';
+        return `<div class="item ${cls}">
+          <div class="item-main" onclick="toggle('${it.id}')">
+            <div class="item-right">
+              <span class="item-name">${it.name}</span>
+              <span class="pts-badge" style="background:${bbg};color:${bc}">${isQ?fmt(it.pts/2):it.pts} نقطة</span>
+            </div>
+            <div class="circle"><div class="tick"></div></div>
+          </div>
+          ${it.isSalah?`<div class="qada-row"><label class="qada-toggle" onclick="event.stopPropagation()"><input type="checkbox" ${isQ?'checked':''} onchange="toggleQada('${it.id}',this.checked)"/><span>صلاة قضاء (نص النقاط: ${fmt(it.pts/2)})</span></label></div>`:''}
         </div>`;
       }).join('')}
-      <div class="cat-bar"><div class="cat-bar-fill" style="width:${cp}%;background:${c.color}"></div></div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:${cp}%;background:${cat.color}"></div></div>
     </div>`;
   }).join('');
 
-  const savedPhone = load('wird_phone', SHEIKH_PHONE);
-  const savedName  = load('wird_name', '');
-  const histHTML = history.length ? `
-    <div class="history-box">
-      <div class="history-title">سجل الأيام السابقة</div>
-      ${history.map(h=>{
-        const p=Math.round(h.done/h.total*100);
-        return `<div class="history-row">
-          <span style="color:#888">${h.label}</span>
-          <span style="font-weight:700;color:${p>=80?'#1D9E75':p>=50?'#B5710A':'#A32D2D'}">${p}%</span>
-        </div>`;
-      }).join('')}
-    </div>` : '';
+  const sPhone=load('wird2_phone',SHEIKH_PHONE),sName=load('wird2_name',''),sComment=load('wird2_comment','');
+  const histHTML=history.length?`<div class="history-box"><div class="history-title">سجل الأيام السابقة</div>${history.map(h=>{ const p=Math.round(h.got/h.max*100); return `<div class="history-row"><span style="color:var(--muted)">${h.label}</span><span style="font-weight:700;color:${p>=80?'var(--green)':p>=50?'var(--amber)':'var(--red)'}">${fmt(h.got)}/${h.max} (${p}%)</span></div>`; }).join('')}</div>`:'';
 
-  document.getElementById('bottom').innerHTML = `
-    <div class="phone-box">
-      <label>اسمك (يظهر في الرسالة للشيخ)</label>
-      <input id="name-inp" type="text" placeholder="مثال: محمد أحمد" value="${savedName}"
-        oninput="save('wird_name',this.value)" style="margin-bottom:10px;font-family:'Tajawal',sans-serif" />
-      <label style="margin-top:4px">رقم الشيخ (بالصيغة الدولية)</label>
-      <input id="phone-inp" type="tel" value="${savedPhone}"
-        oninput="save('wird_phone',this.value)" />
+  document.getElementById('bottom').innerHTML=`
+    <div class="input-card">
+      <label>اسمك (يظهر في رسالة الشيخ)</label>
+      <input id="name-inp" type="text" placeholder="مثال: محمد أحمد" value="${sName}" oninput="save('wird2_name',this.value)"/>
+      <label>تعليق أو ملاحظة للشيخ (اختياري)</label>
+      <textarea id="comment-inp" placeholder="اكتب أي ملاحظة هنا..." oninput="save('wird2_comment',this.value)">${sComment}</textarea>
+      <label>رقم الشيخ (بالصيغة الدولية)</label>
+      <input id="phone-inp" type="tel" value="${sPhone}" oninput="save('wird2_phone',this.value)" style="direction:ltr;font-family:monospace"/>
     </div>
     <button class="wa-btn" onclick="sendWA()">
       <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -254,7 +241,6 @@ function render() {
     <button class="reset-btn" onclick="resetDay()">حفظ اليوم وإعادة التهيئة ليوم جديد</button>
   `;
 }
-
 render();
 </script>
 </body>
